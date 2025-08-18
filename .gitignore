@@ -1,0 +1,35 @@
+# Environment variables file (DO NOT commit to git)
+.env
+
+# GitHub Actions runner
+actions-runner/
+
+# Service data directories
+plex/
+qbittorrent/
+flood/
+homebridge/
+mealie/
+kavita/
+filebrowser/
+portainer/
+
+# Backup files
+backups/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp

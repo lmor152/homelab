@@ -1,0 +1,130 @@
+
+services:
+  plex:
+    container_name: plex
+    image: lscr.io/linuxserver/plex:latest
+    network_mode: host
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - VERSION=docker
+      - TZ=${TZ}
+    volumes:
+      - ./plex/config:/config
+      - ${MEDIA_PATH}:/media
+    restart: unless-stopped
+
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:latest
+    ports:
+      - "${QBITTORRENT_WEB_PORT}:8080"  # Web UI
+      - "${QBITTORRENT_TORRENT_PORT}:6881"  # Torrent port
+      - "${QBITTORRENT_TORRENT_PORT}:6881/udp"
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=8080
+    volumes:
+      - ./qbittorrent/config:/config
+      - ${MEDIA_PATH}:/downloads
+    restart: unless-stopped
+
+  flood:
+    container_name: flood
+    image: jesec/flood:latest
+    restart: unless-stopped
+    ports:
+      - "${FLOOD_PORT}:3000"
+    environment:
+      - FLOOD_OPTION_port=3000
+      - FLOOD_OPTION_host=0.0.0.0
+      - FLOOD_OPTION_allowedpath=/downloads
+    volumes:
+      - ${MEDIA_PATH}:/downloads
+      - ./flood/config:/root/.flood
+
+  homebridge:
+    image: homebridge/homebridge:latest
+    container_name: homebridge
+    restart: unless-stopped
+    network_mode: host
+    ports:
+      - "${HOMEBRIDGE_PORT}:8581"
+    volumes:
+      - ${HOMEBRIDGE_PATH}:/homebridge
+    environment:
+      - TZ=${TZ}
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
+
+  mealie:
+    container_name: mealie
+    image: ghcr.io/mealie-recipes/mealie:latest
+    restart: unless-stopped
+    ports:
+      - "${MEALIE_PORT}:9000"
+    environment:
+      - ALLOW_SIGNUP=false
+      - BASE_URL=${MEALIE_BASE_URL}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ./mealie/data:/app/data
+
+  tennis-booker:
+    build:
+      context: https://${GITHUB_TOKEN}:x-oauth-basic@github.com/lmor152/tennis-booker-v2.git
+    container_name: tennis-booker
+    restart: unless-stopped
+    environment:
+      - SMTP_USERNAME=${TENNIS_BOOKER_SMTP_USERNAME}
+      - SMTP_PASSWORD=${TENNIS_BOOKER_SMTP_PASSWORD}
+      - SMTP_FROM=${TENNIS_BOOKER_SMTP_FROM}
+      - ENCRYPTION_KEY=${TENNIS_BOOKER_ENCRYPTION_KEY}
+
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "${PORTAINER_PORT}:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+  kavita:
+    container_name: kavita
+    image: jvmilazz0/kavita:latest
+    ports:
+      - "${KAVITA_PORT}:5000"  # Web UI
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ./kavita/config:/kavita/config
+      - ${MEDIA_PATH}/Books:/manga
+    restart: unless-stopped
+
+  filebrowser:
+    container_name: filebrowser
+    image: filebrowser/filebrowser:latest
+    user: "${DOCKER_UID}:${DOCKER_GID}"
+    ports:
+      - "${FILEBROWSER_PORT}:80"
+    volumes:
+      - ${MEDIA_PATH}:/srv
+      - ./filebrowser/config:/config
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+
+volumes:
+    portainer_data:
