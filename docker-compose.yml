@@ -126,5 +126,17 @@ services:
     environment:
       - TZ=${TZ}
 
+  filestash:
+    container_name: filestash
+    image: machines/filestash:latest
+    ports:
+      - "${FILESTASH_PORT}:8334"
+    volumes:
+      - ./filestash/config:/app/data/config
+      - ${MEDIA_PATH}:/data
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+
 volumes:
     portainer_data:

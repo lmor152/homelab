@@ -22,7 +22,7 @@ logs-service:
 
 health:
 	docker compose ps
-	@for service in plex qbittorrent homebridge portainer mealie kavita; do \
+	@for service in plex qbittorrent homebridge portainer mealie kavita filestash; do \
 		if docker compose ps $$service | grep -q "Up"; then \
 			echo "✅ $$service is running"; \
 		else \
