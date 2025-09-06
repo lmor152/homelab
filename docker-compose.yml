@@ -80,16 +80,15 @@ services:
     volumes:
       - ./mealie/data:/app/data
 
-  tennis-booker:
-    build:
-      context: https://${GITHUB_TOKEN}:x-oauth-basic@github.com/lmor152/tennis-booker-v2.git
-    container_name: tennis-booker
+  omnibooker:
+    image: ghcr.io/lmor152/omnibooker:latest
+    container_name: omnibooker
     restart: unless-stopped
     environment:
-      - SMTP_USERNAME=${TENNIS_BOOKER_SMTP_USERNAME}
-      - SMTP_PASSWORD=${TENNIS_BOOKER_SMTP_PASSWORD}
-      - SMTP_FROM=${TENNIS_BOOKER_SMTP_FROM}
-      - ENCRYPTION_KEY=${TENNIS_BOOKER_ENCRYPTION_KEY}
+      - SMTP_USERNAME=${OMNIBOOKER_SMTP_USERNAME}
+      - SMTP_PASSWORD=${OMNIBOOKER_SMTP_PASSWORD}
+      - SMTP_FROM=${OMNIBOOKER_SMTP_FROM}
+      - ENCRYPTION_KEY=${OMNIBOOKER_ENCRYPTION_KEY}
 
   portainer:
     image: portainer/portainer-ce
@@ -126,17 +125,6 @@ services:
     environment:
       - TZ=${TZ}
 
-  filestash:
-    container_name: filestash
-    image: machines/filestash:latest
-    ports:
-      - "${FILESTASH_PORT}:8334"
-    volumes:
-      - ./filestash/config:/app/data/config
-      - ${MEDIA_PATH}:/data
-    restart: unless-stopped
-    environment:
-      - TZ=${TZ}
 
 volumes:
     portainer_data:
