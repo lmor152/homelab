@@ -141,6 +141,22 @@ services:
       - /run/dbus:/run/dbus:ro
     privileged: true
 
+  matter-server:
+    container_name: matter-server
+    image: ghcr.io/home-assistant-libs/python-matter-server:stable
+    restart: unless-stopped
+    network_mode: host
+    ports:
+      - "${MATTER_SERVER_PORT}:5580"
+    volumes:
+      - ./matter-server/data:/data
+      - /run/dbus:/run/dbus:ro
+    environment:
+      - TZ=${TZ}
+    privileged: true
+    security_opt:
+      - apparmor:unconfined
+
 
 
 volumes:
