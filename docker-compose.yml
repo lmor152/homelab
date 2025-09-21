@@ -3,8 +3,7 @@ services:
   plex:
     container_name: plex
     image: lscr.io/linuxserver/plex:latest
-    ports:
-      - "32400:32400"
+    network_mode: host
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
@@ -127,6 +126,21 @@ services:
     restart: unless-stopped
     environment:
       - TZ=${TZ}
+
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+    network_mode: host
+    ports:
+      - "${HOMEASSISTANT_PORT}:8123"
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ./homeassistant/config:/config
+      - /run/dbus:/run/dbus:ro
+    privileged: true
+
 
 
 volumes:
