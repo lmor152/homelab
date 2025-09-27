@@ -62,6 +62,7 @@ services:
     container_name: cloudflared
     restart: unless-stopped
     command: tunnel run
+    network_mode: host
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
 
