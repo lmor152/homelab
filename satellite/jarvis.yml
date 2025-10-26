@@ -1,0 +1,12 @@
+
+services:
+
+    jarvis-satellite:
+    image: ghcr.io/lmor152/jarvis-monorepo/satellite:latest
+    container_name: jarvis-satellite
+    restart: unless-stopped
+    environment:
+      PICOVOICE_ACCESS_KEY: ${PICOVOICE_ACCESS_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ASSISTANT_URL: ${ASSISTANT_URL}
+      

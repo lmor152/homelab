@@ -1,5 +1,7 @@
-# Environment variables file (DO NOT commit to git)
+# Environment variables files
 .env
+hub.env
+satellite.env
 
 # GitHub Actions runner
 actions-runner/
