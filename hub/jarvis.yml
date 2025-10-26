@@ -6,6 +6,7 @@ services:
       container_name: jarvis-backend
       restart: unless-stopped
       environment:
+        TIMEZONE: ${TZ}
         PLEX_URL: ${PLEX_URL}
         PLEX_TOKEN: ${PLEX_TOKEN}
         HA_URL: ${HA_URL}
