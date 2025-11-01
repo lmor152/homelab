@@ -11,5 +11,19 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
 
+  bluetooth-speaker:
+    image: zjuros/docker-bluetooth-speaker:latest
+    container_name: bluetooth-speaker
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - /var/run/dbus:/var/run/dbus
+      - /dev/snd:/dev/snd
+    environment:
+      - PULSE_SERVER=unix:/run/pulse/native
+    devices:
+      - /dev/snd
+
 volumes:
     portainer_data:
