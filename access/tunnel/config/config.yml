@@ -2,9 +2,6 @@ tunnel: my-homelab
 credentials-file: /etc/cloudflared/my-homelab.json
 
 ingress:
-  - hostname: auth.lmor152.com
-    service: http://authentik-server:9000
-
   - hostname: home.lmor152.com
     service: http://homepage:3000
 

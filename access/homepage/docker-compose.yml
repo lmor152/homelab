@@ -10,11 +10,12 @@ services:
     env_file:
       - .env
     environment:
-      # Set this up once Authentik OIDC app is created
       HOMEPAGE_AUTH_PROVIDER: oidc
-      HOMEPAGE_AUTH_OIDC_CLIENT_ID: homepage
-      HOMEPAGE_AUTH_OIDC_CLIENT_SECRET: ${HOMEPAGE_CLIENT_SECRET}
-      HOMEPAGE_AUTH_OIDC_ISSUER: https://auth.lmor152.com/application/o/homepage/
+      HOMEPAGE_AUTH_OIDC_CLIENT_ID: ${AUTH0_CLIENT_ID}
+      HOMEPAGE_AUTH_OIDC_CLIENT_SECRET: ${AUTH0_CLIENT_SECRET}
+      HOMEPAGE_AUTH_OIDC_ISSUER: https://${AUTH0_DOMAIN}/
+      HOMEPAGE_AUTH_OIDC_SCOPE: openid profile email
+      HOMEPAGE_AUTH_OIDC_USERNAME_CLAIM: email
       PLEX_TOKEN: ${PLEX_TOKEN}
     restart: unless-stopped
     networks:

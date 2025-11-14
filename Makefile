@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 COMPOSE ?= docker compose
 HOMELAB_NETWORK := homelab
-STACK_DIRS := apps auth access/homepage access/tunnel smart_home_hub smart_home_satellite
+STACK_DIRS := apps access/homepage access/tunnel smart_home_hub smart_home_satellite
 
 .PHONY: help network up down restart ps logs env-check clean
 
