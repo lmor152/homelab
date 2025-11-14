@@ -1,0 +1,69 @@
+
+  
+services:
+
+  homebridge:
+    image: homebridge/homebridge:latest
+    container_name: homebridge
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ${HOMEBRIDGE_PATH}:/homebridge
+    environment:
+      - TZ=${TZ}
+
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ./homeassistant/config:/config
+      - /run/dbus:/run/dbus:ro
+    privileged: true
+
+  matter-server:
+    container_name: matter-server
+    image: ghcr.io/home-assistant-libs/python-matter-server:stable
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./matter-server/data:/data
+      - /run/dbus:/run/dbus:ro
+    environment:
+      - TZ=${TZ}
+    privileged: true
+    security_opt:
+      - apparmor:unconfined
+
+  jarvis-backend:
+    image: ghcr.io/lmor152/jarvis-monorepo/backend:latest
+    container_name: jarvis-backend
+    restart: unless-stopped
+    environment:
+      TIMEZONE: ${TZ}
+      PLEX_URL: ${PLEX_URL}
+      PLEX_TOKEN: ${PLEX_TOKEN}
+      HA_URL: ${HA_URL}
+      HA_TOKEN: ${HA_TOKEN}
+      OMNIBOOKER_URL: ${OMNIBOOKER_URL}
+    networks:
+      - homelab
+
+  jarvis-assistant:
+    image: ghcr.io/lmor152/jarvis-monorepo/assistant:latest
+    container_name: jarvis-assistant
+    restart: unless-stopped
+    environment:
+      CHAT_MODEL: ${CHAT_MODEL}
+      CHAT_API_KEY: ${OPENAI_API_KEY}
+      CHAT_URL: ${CHAT_URL}
+  BACKEND_URL: ${BACKEND_URL}
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true

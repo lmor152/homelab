@@ -1,0 +1,31 @@
+---
+# ============================================================
+#  HOMEPAGE CONFIG – EXAMPLE WITH PLEX + MEALIE
+#  Add more apps by duplicating the `- Plex:` or `- Mealie:` blocks
+# ============================================================
+
+# ---- Group 1: Media ----------------------------------------
+- Media:
+    - Plex:
+        icon: plex
+        href: https://plex.lmor152.com     # Public/internal URL
+        server: http://plex:32400          # Internal container URL
+        description: Media server
+        widget:
+            type: plex
+            url: http://plex:32400
+            token: ${PLEX_TOKEN}           # Stored via docker secrets or env vars
+
+# ---- Group 2: Food & Cooking --------------------------------
+- Food:
+    - Mealie:
+        icon: mealie
+        href: https://mealie.lmor152.com   # Public/internal URL
+        server: http://mealie:9000         # Internal container URL
+        description: Recipe manager
+        widget:
+            type: mealie
+            url: http://mealie:9000
+            username: ${MEALIE_USER}       # optional
+            password: ${MEALIE_PASSWORD}   # optional
+

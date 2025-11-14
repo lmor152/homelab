@@ -1,0 +1,20 @@
+tunnel: my-homelab
+credentials-file: /etc/cloudflared/my-homelab.json
+
+ingress:
+  - hostname: auth.lmor152.com
+    service: http://authentik-server:9000
+
+  - hostname: home.lmor152.com
+    service: http://homepage:3000
+
+  - hostname: mealie.lmor152.com
+    service: http://mealie:9000
+
+  - hostname: plex.lmor152.com
+    service: http://host.docker.internal:32400
+
+  - hostname: qbit.lmor152.com
+    service: http://qbittorrent:8080
+
+  - service: http_status:404

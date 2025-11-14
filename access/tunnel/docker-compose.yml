@@ -1,0 +1,20 @@
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel run
+    env_file:
+      - .env
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
+    volumes:
+      - ./config:/etc/cloudflared
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true

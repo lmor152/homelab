@@ -1,0 +1,41 @@
+services:
+
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: unless-stopped
+    ports:
+      - "9010:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+
+  airplay-speaker:
+    image: mikebrady/shairport-sync:latest
+    container_name: airplay-speaker
+    network_mode: host
+    restart: unless-stopped
+    devices:
+      - "/dev/snd:/dev/snd"
+    command: -vv -o alsa -- -d plughw:CARD=Dock,DEV=0 -m software -V 0.0
+    volumes:
+      - /proc/asound:/proc/asound:ro
+    logging:
+      options:
+        max-size: "200k"
+        max-file: "10"
+    environment:
+      - NAME=Jarvis
+
+  jarvis-satellite:
+    image: ghcr.io/lmor152/jarvis-monorepo/satellite:latest
+    container_name: jarvis-satellite
+    restart: unless-stopped
+    environment:
+      PICOVOICE_ACCESS_KEY: ${PICOVOICE_ACCESS_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ASSISTANT_URL: ${ASSISTANT_URL}
+
+
+volumes:
+    portainer_data:

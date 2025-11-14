@@ -1,0 +1,25 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock # optional widgets
+    env_file:
+      - .env
+    environment:
+      # Set this up once Authentik OIDC app is created
+      HOMEPAGE_AUTH_PROVIDER: oidc
+      HOMEPAGE_AUTH_OIDC_CLIENT_ID: homepage
+      HOMEPAGE_AUTH_OIDC_CLIENT_SECRET: ${HOMEPAGE_CLIENT_SECRET}
+      HOMEPAGE_AUTH_OIDC_ISSUER: https://auth.lmor152.com/application/o/homepage/
+      PLEX_TOKEN: ${PLEX_TOKEN}
+    restart: unless-stopped
+    networks:
+      - homelab
+
+networks:
+  homelab:
+    external: true

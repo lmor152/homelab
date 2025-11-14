@@ -30,6 +30,8 @@ services:
       - ./qbittorrent/config:/config
       - ${MEDIA_PATH}:/downloads
     restart: unless-stopped
+    networks:
+      - homelab
 
   flood:
     container_name: flood
@@ -44,25 +46,8 @@ services:
     volumes:
       - ${MEDIA_PATH}:/downloads
       - ./flood/config:/root/.flood
-
-  homebridge:
-    image: homebridge/homebridge:latest
-    container_name: homebridge
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - ${HOMEBRIDGE_PATH}:/homebridge
-    environment:
-      - TZ=${TZ}
-
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflared
-    restart: unless-stopped
-    command: tunnel run
-    network_mode: host
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARED_TUNNEL_TOKEN}
+    networks:
+      - homelab
 
   mealie:
     container_name: mealie
@@ -78,6 +63,8 @@ services:
       - TZ=${TZ}
     volumes:
       - ./mealie/data:/app/data
+    networks:
+      - homelab
 
   omnibooker:
     image: ghcr.io/lmor152/omnibooker:latest
@@ -90,6 +77,8 @@ services:
       - SMTP_PORT=587
       - EMAIL_FROM=${OMNIBOOKER_SMTP_FROM}
       - ENCRYPTION_KEY=${OMNIBOOKER_ENCRYPTION_KEY}
+    networks:
+      - homelab
 
   portainer:
     image: portainer/portainer-ce
@@ -100,6 +89,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+    networks:
+      - homelab
 
   kavita:
     container_name: kavita
@@ -112,6 +103,8 @@ services:
       - ./kavita/config:/kavita/config
       - ${MEDIA_PATH}/Books:/manga
     restart: unless-stopped
+    networks:
+      - homelab
 
   filebrowser:
     container_name: filebrowser
@@ -125,34 +118,15 @@ services:
     restart: unless-stopped
     environment:
       - TZ=${TZ}
+    networks:
+      - homelab
 
-  homeassistant:
-    container_name: homeassistant
-    image: ghcr.io/home-assistant/home-assistant:stable
-    restart: unless-stopped
-    network_mode: host
-    environment:
-      - TZ=${TZ}
-    volumes:
-      - ./homeassistant/config:/config
-      - /run/dbus:/run/dbus:ro
-    privileged: true
-
-  matter-server:
-    container_name: matter-server
-    image: ghcr.io/home-assistant-libs/python-matter-server:stable
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - ./matter-server/data:/data
-      - /run/dbus:/run/dbus:ro
-    environment:
-      - TZ=${TZ}
-    privileged: true
-    security_opt:
-      - apparmor:unconfined
 
 
 
 volumes:
     portainer_data:
+
+networks:
+  homelab:
+    external: true
