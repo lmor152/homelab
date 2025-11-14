@@ -11,6 +11,7 @@ services:
     volumes:
       - ./config:/etc/cloudflared
     extra_hosts:
+      - "plex:host-gateway"
       - "host.docker.internal:host-gateway"
     networks:
       - homelab

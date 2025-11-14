@@ -1,0 +1,21 @@
+
+- Media:
+    - Plex:
+        icon: plex
+        href: https://plex.lmor152.com    
+        server: http://plex:32400       
+        widget:
+            type: plex
+            url: http://plex:32400
+            token: ${PLEX_TOKEN}         
+
+- Food:
+    - Mealie:
+        icon: mealie
+        href: https://mealie.lmor152.com   
+        server: http://mealie:9000   
+        widget:
+            type: mealie
+            url: http://mealie:9000
+            username: ${MEALIE_USER}      
+            password: ${MEALIE_PASSWORD}
